@@ -1,0 +1,160 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>br.com.mateusparente</groupId>
+  <artifactId>HBM2JavaConverter</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>HBM2JavaConverter</name>
+  <description>Converter HBM Files to Java Files</description>
+  
+	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <hibernate.version>4.3.5.Final</hibernate.version>
+        <hsqldb.version>1.8.0.10</hsqldb.version>
+        <slf4j.version>1.7.5</slf4j.version>
+        <logback.version>1.0.13</logback.version>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-core</artifactId>
+		    <version>${hibernate.version}</version>
+		</dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>${hsqldb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>c3p0</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-tools</artifactId>
+            <version>${hibernate.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+  
+  	<build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>test-compile</phase>
+                        <configuration>
+                            <target>
+                                <echo message="Ant target, through maven-antrun-plugin, started"/>
+
+                                <property name="maven_compile_classpath" refid="maven.compile.classpath"/>
+                                <property name="maven_test_classpath" refid="maven.test.classpath"/>
+                                <path id="hibernatetool.path">
+                                    <pathelement path="${maven_compile_classpath}" />
+                                    <pathelement path="${maven_test_classpath}" />
+                                </path>
+
+                                <taskdef name="hibernatetool"
+                                         classname="org.hibernate.tool.ant.HibernateToolTask"
+                                         classpathref="hibernatetool.path" />
+
+                                <property
+                                    name="generatedByHibernate.outputDirectory"
+                                    value="${basedir}/src/main/java" />
+                                <mkdir
+                                    dir="${generatedByHibernate.outputDirectory}" />
+                                
+                                <hibernatetool destdir="${generatedByHibernate.outputDirectory}">
+                                    
+                                    <classpath>
+                                        <path location="${project.build.directory}/classes"/>
+                                    </classpath>
+                                    
+                                     <configuration configurationfile="hibernate.cfg.xml"/>
+                                        
+                                     <hbm2java jdk5="true" ejb3="true">
+					                 </hbm2java>   
+                                        
+                                </hibernatetool>
+
+                                <echo message="Ant target, through maven-antrun-plugin, terminated"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+        	<plugins>
+        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        		<plugin>
+        			<groupId>org.eclipse.m2e</groupId>
+        			<artifactId>lifecycle-mapping</artifactId>
+        			<version>1.0.0</version>
+        			<configuration>
+        				<lifecycleMappingMetadata>
+        					<pluginExecutions>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>
+        									org.apache.maven.plugins
+        								</groupId>
+        								<artifactId>
+        									maven-antrun-plugin
+        								</artifactId>
+        								<versionRange>
+        									[1.7,)
+        								</versionRange>
+        								<goals>
+        									<goal>run</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore></ignore>
+        							</action>
+        						</pluginExecution>
+        					</pluginExecutions>
+        				</lifecycleMappingMetadata>
+        			</configuration>
+        		</plugin>
+        	</plugins>
+        </pluginManagement>
+  </build>
+  
+  
+</project>

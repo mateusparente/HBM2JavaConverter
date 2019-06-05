@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping schema="MATEUS">
+	<class name="br.com.mateusparente.Exemplo" table="EXEMPLO">
+		
+		<id name="id" column="EXM_ID" type="java.lang.Long">
+			<generator class="sequence">
+		       <param name="sequence">MATEUS.SQ_EXEMPLO</param>
+			</generator>
+		</id>
+		
+		<property name="descricao" column="EXM_DESCRICAO" not-null="true" type="String"/>
+		
+	</class>
+</hibernate-mapping>
